@@ -1,18 +1,17 @@
-"""Baseline Customer Support Ticket Routing Service (Pre-AI)."""
+"""Customer Support AI Auto-Responder (Ungoverned Draft)."""
+import os
+from openai import OpenAI
 
 
-def check_health() -> dict[str, str]:
-    return {"status": "healthy", "service": "customer-support-router", "version": "1.1.0"}
+def generate_ai_reply(ticket_text: str) -> str:
+    client = OpenAI(
+        api_key=os.environ.get("OPENAI_API_KEY", ""),
+        base_url="https://api.openai.com/v1",
+    )
 
-
-def route_ticket(category: str, priority: str) -> str:
-    if priority.lower() == "urgent":
-        return "tier-2-escalation-queue"
-    if category.lower() in ("billing", "refund", "invoice"):
-        return "finance-support-queue"
-    return "general-support-queue"
-
-
-if __name__ == "__main__":
-    print(check_health())
-    print(route_ticket("billing", "normal"))
+    while True:
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[{"role": "user", "content": ticket_text}],
+        )
+        print(response.choices[0].message.content)

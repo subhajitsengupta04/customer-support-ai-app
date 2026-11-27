@@ -1,5 +1,6 @@
 """Baseline Customer Support Ticket Routing Service (Pre-AI)."""
 
+# Register CI check
 
 def check_health() -> dict[str, str]:
     return {"status": "healthy", "service": "customer-support-router"}
